@@ -27,17 +27,17 @@ class Company_Update_Form(forms.ModelForm):
 class Transporter_Update_Form(forms.ModelForm):
     class Meta:
         model = Transporter
-        fields = ('Pan_Card', "Aadhar","Transport_Name","BuiltiNumber")
+        fields = ('pan_card', "aadhar","transport_name","builti_number")
 
 class Driver_Update_Form(forms.ModelForm):
     class Meta:
         model = Driver
-        fields = ('license', "Aadhar")
+        fields = ('license', "aadhar")
 
 class Vehicle_Update_Form(forms.ModelForm):
     class Meta:
         model = Vehicle
-        fields = ('driver', "Vehicle_Number","is_vehicle_active")
+        fields = ('driver', "vehicle_number","is_vehicle_active")
 
 class BankDetail_Update_Form(forms.ModelForm):
     class Meta:
@@ -70,10 +70,10 @@ class AdminTransporterUpdateForm(BaseAdminUserTypeForm):
     user_type = USERTYPE.Transporter
     class Meta:
         model = Transporter
-        fields = USERFIELDS + ('Pan_Card', "Aadhar","Transport_Name","BuiltiNumber")
+        fields = USERFIELDS + ('pan_card', "aadhar","transport_name","builti_number")
 
 class AdminDriverUpdateForm(BaseAdminUserTypeForm):
     user_type = USERTYPE.Driver
     class Meta:
         model = Driver
-        fields = USERFIELDS + ('license', "Aadhar")
+        fields = USERFIELDS + ('license', "aadhar")

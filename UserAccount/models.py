@@ -113,18 +113,17 @@ class Company(CustomUser, BaseModel):
 
 
 class Transporter(CustomUser, BaseModel):
-    Pan_Card = models.CharField(_('Pan Card'), max_length=10, blank=True)
-    Aadhar = models.CharField(_('Aadhar number'), max_length=12, blank=True)
-    Transport_Name = models.CharField(
-        _('Transport Name'), max_length=100, blank=True)
-    BuiltiNumber = models.PositiveIntegerField(default=1)
-    Vehicle_Under_Control = models.ManyToManyField(
+    pan_card = models.CharField(_('Pan Card'), max_length=10, blank=True)
+    aadhar = models.CharField(_('Aadhar number'), max_length=12, blank=True)
+    transport_name = models.CharField(_('Transport Name'), max_length=100, blank=True)
+    builti_number = models.PositiveIntegerField(default=1)
+    vehicle_under_control = models.ManyToManyField(
         'Vehicle', related_name="transporters", blank=True, through='VehicleRequest')
 
     class Meta:
         verbose_name = "Transporter"
     def __str__(self):
-        return f'{str(self.Transport_Name)}'
+        return f'{str(self.transport_name)}'
 
 
 class VehicleOwner(CustomUser, BaseModel):
@@ -139,19 +138,19 @@ class Vehicle(models.Model):
                               null=True, blank=True, related_name='owned_vehicles')
     driver = models.OneToOneField(
         'Driver', on_delete=models.SET_NULL, null=True, blank=True)
-    Vehicle_Number = models.CharField(
+    vehicle_number = models.CharField(
         _('Vehicle Number'), max_length=10, null=True, blank=True)
     is_vehicle_active = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Vehicle"
     def __str__(self):
-        return f'{self.Vehicle_Number}'
+        return f'{self.vehicle_number}'
 
 
 class Driver(CustomUser, BaseModel):
     license = models.CharField(_('license number'), max_length=10, blank=True)
-    Aadhar = models.CharField(_('Aadhar number'), max_length=12, blank=True)
+    aadhar = models.CharField(_('Aadhar number'), max_length=12, blank=True)
     class Meta:
         verbose_name = "Driver"
 
@@ -159,10 +158,10 @@ class Driver(CustomUser, BaseModel):
         return f'{str(self.user.get_short_name())}'
 
 class VehicleRequest(BaseModel):
-    Vehicle_Owner = models.ForeignKey('VehicleOwner', on_delete=models.CASCADE)
-    Vehicle = models.ForeignKey("Vehicle", on_delete=models.CASCADE)
-    Transporter = models.ForeignKey("Transporter", on_delete=models.CASCADE)
-    Requeststatus = models.CharField(
+    vehicle_owner = models.ForeignKey('VehicleOwner', on_delete=models.CASCADE)
+    vehicle = models.ForeignKey("Vehicle", on_delete=models.CASCADE)
+    transporter = models.ForeignKey("Transporter", on_delete=models.CASCADE)
+    request_status = models.CharField(
         choices=REQUEST_STATUS, max_length=20, blank=False, default=REQUEST_STATUS[0][0])
     
 # class Friendship(models.Model):

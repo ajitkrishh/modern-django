@@ -4,6 +4,7 @@ from .views import *
 
 urlpatterns = [
     path('profile/<int:pk>/edit', update_profile,name = "update"),
+    path('profile/edit', update_profile,name = "update"),
     path('register/', registration,name = "register"),
     # path('vehicles/', get_vehicle,name = "vehicles"),
     # path('vehicles-status/', activate_deacticate_vehicle,name = "activate_deacticate_vehicle"),

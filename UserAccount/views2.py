@@ -53,7 +53,7 @@ def index(req):     #home.html
        
         o_user:Organisation = user.organisation
 
-        linked_transporters = o_user.linked_transporters.values_list("user__id", "Transport_Name")
+        linked_transporters = o_user.linked_transporters.values_list("user__id", "transport_name")
         linked_organisations = o_user.linked_Organisation.values_list("id", "Organisation_Name", "user__id")
 
             
@@ -100,7 +100,7 @@ def index(req):     #home.html
         # Get the IDs and names of all linked organizations for the transporter
         linked_organisations = t_user.Linked_Organisation.values_list(
             'user_id', 'Organisation_Name')
-        linked_owners = t_user.Vehicle_Under_Control.values_list(
+        linked_owners = t_user.vehicle_under_control.values_list(
             'owner__user_id', 'owner__user__first_name').distinct()
         
                 
@@ -123,9 +123,9 @@ def index(req):     #home.html
         del trip_counts
 
         total_vehicle_status = VehicleRequest.objects.filter(Transporter=t_user).aggregate(
-                active=Count('id', filter=Q(VehicleStatus=True , Requeststatus='A')),
-                inactive=Count('id', filter=Q(VehicleStatus=False,Requeststatus='A')),
-                Vehicle_requests=Count('id', filter=Q(Requeststatus='P'))
+                active=Count('id', filter=Q(VehicleStatus=True , request_status='A')),
+                inactive=Count('id', filter=Q(VehicleStatus=False,request_status='A')),
+                Vehicle_requests=Count('id', filter=Q(request_status='P'))
 )
         total_vehicle_status = sanitize_integer_values(total_vehicle_status)
         # print(total_vehicle_status)
@@ -147,7 +147,7 @@ def index(req):     #home.html
         o_user = user.owner
         vehicle_list = Vehicle.objects.filter(owner__id = o_user.id)   \
                                             .select_related("driver")  \
-                                            .values_list('id' , 'Vehicle_Number',"is_active",'driver__id','driver__user__first_name')
+                                            .values_list('id' , 'vehicle_number',"is_active",'driver__id','driver__user__first_name')
 
 
         linked_transporters = VehicleRequest.objects.filter(Vehicle_Owner__id = o_user.id)\
@@ -307,7 +307,7 @@ def add_vehicle(req):
 
                 counts = Vehicle.objects.aggregate(
                     driver = Count('id' , filter=Q(driver = driver)),
-                    vehicle = Count('id' , filter=Q(Vehicle_Number = vh_no))
+                    vehicle = Count('id' , filter=Q(vehicle_number = vh_no))
                 )
                 print(counts)
                 msg = ''
@@ -316,7 +316,7 @@ def add_vehicle(req):
                         new_vehicle = Vehicle.objects.create(
                             owner =  o_user,
                             driver = driver,
-                            Vehicle_Number = vh_no,
+                            vehicle_number = vh_no,
                             is_active = False
                         )
                         msg = f'vehicle with number {vh_no} is added successfully !!!'
@@ -365,10 +365,10 @@ def get_vehicle(req):
         owner = user.owner
         vehicle_info = Vehicle.objects.filter(owner=owner).select_related('driver__user').prefetch_related('transporters').values_list(
              'pk',
-            "Vehicle_Number", 
+            "vehicle_number", 
             "transporters__Transport_Name",
             "driver__user__first_name", 
-            'is_active').order_by('Vehicle_Number')
+            'is_active').order_by('vehicle_number')
         # print(vehicle_info)
 
         vehicle_info = values_list_to_values(vehicle_info , ['obj_id','vehicleNumber','stakeholder',
@@ -382,7 +382,7 @@ def get_vehicle(req):
         user = req.user
         transporter = user.transporter
         vehicle_info = VehicleRequest.objects.filter(Transporter_id=transporter.id,
-                                                     Requeststatus='A').values_list(
+                                                     request_status='A').values_list(
                        'pk',                                 
                       "Vehicle__Vehicle_Number","Vehicle_Owner__user__first_name",
                       "Vehicle__driver__user__first_name","VehicleStatus").order_by('Vehicle')
@@ -397,7 +397,7 @@ def get_vehicle(req):
     
     elif usertype == USERTYPE[3]:
        
-        vehicle_info = Vehicle.objects.filter(driver__user_id  = req.user.id).select_related('owner').values_list('pk','owner__user__first_name' , 'is_active','Vehicle_Number')
+        vehicle_info = Vehicle.objects.filter(driver__user_id  = req.user.id).select_related('owner').values_list('pk','owner__user__first_name' , 'is_active','vehicle_number')
         if not vehicle_info:
             return redirect('home')
         
@@ -567,8 +567,8 @@ def vehicle_connection_request(req):
         return redirect('home') 
     t_user:Transporter = user.transporter
     if req.method == 'GET':
-        vh_connection_request = VehicleRequest.objects.filter(Transporter = t_user , Requeststatus = 'P')\
-                                                .select_related('Vehicle_Owner','Vehicle')\
+        vh_connection_request = VehicleRequest.objects.filter(Transporter = t_user , request_status = 'P')\
+                                                .select_related('vehicle_owner','Vehicle')\
                                                     .values_list('pk','Vehicle_Owner__id' ,'Vehicle_Owner__user__username','Vehicle__id','Vehicle__Vehicle_Number' )
         vh_connection_request = values_list_to_values(source= vh_connection_request, key_list=['pk' , 'ownerid','username' , 'vehicle_id','vehicle_number'])
         
@@ -593,9 +593,9 @@ def vehicle_connection_request(req):
             # print("11111")
             return redirect('home')
         if user_decision_type == 1:
-            vehicle_req_obj.Requeststatus = 'A'
+            vehicle_req_obj.request_status = 'A'
         elif user_decision_type == 2:
-            vehicle_req_obj.Requeststatus = 'D'
+            vehicle_req_obj.request_status = 'D'
         # print(vehicle_req_obj.__dict__ )
         vehicle_req_obj.save()
         return HttpResponse('OK')

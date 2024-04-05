@@ -19,9 +19,9 @@ admin.site.register(CustomUser,CustomUserAdmin)
 
 class Transporter_Admin(admin.ModelAdmin):
     form = AdminTransporterUpdateForm
-    list_display = ['id','Transport_Name','BuiltiNumber']
+    list_display = ['id','transport_name','builti_number']
     list_per_page = 20
-    list_editable = ['Transport_Name']
+    list_editable = ['transport_name']
 admin.site.register(Transporter,Transporter_Admin)
 
 
@@ -35,9 +35,9 @@ admin.site.register(Company,Company_Admin)
 
 class Driver_Admin(admin.ModelAdmin):
     form = AdminDriverUpdateForm
-    list_display = ['id','license','Aadhar']
+    list_display = ['id','license','aadhar']
     list_per_page = 20
-    list_editable = ['license','Aadhar']
+    list_editable = ['license','aadhar']
 admin.site.register(Driver,Driver_Admin)
 
 
@@ -48,18 +48,18 @@ admin.site.register(VehicleOwner,VehicleOwner_Admin)
 
 class Vehicle_Admin(admin.ModelAdmin):
     list_select_related = ['owner']
-    list_display = ['id','Vehicle_Number','owner','driver']
-    search_fields= ['Vehicle_Number']
+    list_display = ['id','vehicle_number','owner','driver']
+    search_fields= ['vehicle_number']
 
     list_per_page = 20
 admin.site.register(Vehicle,Vehicle_Admin)
 
 
 class Vehicle_Requests_Admin(admin.ModelAdmin):
-    list_select_related = ['Vehicle' , 'Transporter' , 'Vehicle_Owner']
-    list_display = ['id','Vehicle' , 'Transporter' , 'Vehicle_Owner','Requeststatus']
-    list_editable = ['Requeststatus']
-    # search_fields= ['Vehicle_Number']
+    list_select_related = ['vehicle' , 'transporter' , 'vehicle_owner']
+    list_display = ['id','vehicle' , 'transporter' , 'vehicle_owner','request_status']
+    list_editable = ['request_status']
+    # search_fields= ['vehicle_number']
 
     list_per_page = 20
 admin.site.register(VehicleRequest,Vehicle_Requests_Admin)
