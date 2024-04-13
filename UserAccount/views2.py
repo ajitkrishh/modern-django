@@ -229,8 +229,8 @@ def update_profile(req, pk):
         
         specfic_usertype_form_class = {
             USERTYPE[0]: Organisation_Update_Form,
-            USERTYPE[1]: Transporter_Update_Form,
-            USERTYPE[3]: Driver_Update_Form,
+            USERTYPE[1]: TransporterUpdateForm,
+            USERTYPE[3]: DriverUpdateForm,
         }
 
         if form_type == 'general':
@@ -265,7 +265,7 @@ def update_profile(req, pk):
                     None  # Set the charset argument to None
                 )
                 mutable_file['UPI_QR_CODE'] = image_file
-                form_obj = BankDetail_Update_Form(req.POST,mutable_file , instance=req.user.account)
+                form_obj = BankDetailUpdateForm(req.POST,mutable_file , instance=req.user.account)
     
         if form_obj.is_valid():
             form_obj.save()

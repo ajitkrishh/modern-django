@@ -74,10 +74,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Sidebar Functionality
     // ------------------------------------------------------ //
     const sbToggleBtn = document.getElementById('toggle-btn'),
-          sideNavbar  = document.querySelector('.side-navbar'),
-          innerContent = document.querySelector('.content-inner'),
-          smBrand = document.querySelector('.navbar-header .brand-small'),
-          lgBrand = document.querySelector('.navbar-header .brand-big');
+        sideNavbar = document.querySelector('.side-navbar'),
+        innerContent = document.querySelector('.content-inner'),
+        smBrand = document.querySelector('.navbar-header .brand-small'),
+        lgBrand = document.querySelector('.navbar-header .brand-big');
 
     if (sideNavbar) {
         sbToggleBtn.addEventListener('click', function (e) {
@@ -270,5 +270,44 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
+    
+    
+    
 });
+
+
+        // ------------------------------------------------------- //
+        // Initialize select tags with tomselect
+        // ------------------------------------------------------ //
+
+        // Function to initialize Tom-Select on a select element
+        function initializeTomSelect(selectElement) {
+            console.log("added " , selectElement);
+            new TomSelect(selectElement);
+        }
+        // Callback function to be executed when mutations are observed
+        const mutationCallback = function(mutationsList, observer) {
+            for (let mutation of mutationsList) {
+                // Check if nodes were added and iterate over added nodes
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    mutation.addedNodes.forEach(node => {
+                        // Check if the added node is a select element
+                        if (node.tagName && node.tagName.toLowerCase() === 'select') {
+                            // Initialize Tom-Select on the select element
+                            initializeTomSelect(node);
+                        }
+                    });
+                }
+            }
+        };
+
+        // Create a MutationObserver instance
+        const observer = new MutationObserver(mutationCallback);
+
+        // Start observing the document for mutations
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Initialize Tom-Select on any select elements already present in the DOM
+        document.querySelectorAll('select').forEach(selectElement => {
+            initializeTomSelect(selectElement);
+        });

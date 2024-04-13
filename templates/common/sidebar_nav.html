@@ -1,0 +1,9 @@
+{% if usertype == 1  %}
+    {% include 'company/menu.html' %}
+{% elif usertype == 2 %}
+    {% include 'transporter/menu.html' %}
+{% elif usertype == 3 %}
+    {% include 'vehicle_owner/menu.html' %}
+{% elif usertype == 4 %}
+    {% include 'driver/menu.html' %}
+{% endif %}

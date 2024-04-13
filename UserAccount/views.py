@@ -15,8 +15,8 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedire
 
 
 from .forms import (CustomUserRegistration, CustomUserUpdateForm, 
-                    Company_Update_Form, Transporter_Update_Form,
-                    Driver_Update_Form, Vehicle_Update_Form, BankDetail_Update_Form)
+                    CompanyUpdateForm, TransporterUpdateForm,
+                    DriverUpdateForm, VehicleUpdateForm, BankDetailUpdateForm)
 
 from UserAccount.utils import get_allowed_friendship, get_usertypes, sanitize_integer_values, values_list_to_values
 from .models import *
@@ -29,7 +29,7 @@ class CustomLoginView(LoginView):
 
     def get_success_url(self):
         print(self.request.user.UserType)
-        return reverse("update")
+        return reverse("index")
         if self.request.user.UserType == USERTYPE[0]:
             return reverse("organisation-action")
         elif self.request.user.UserType == USERTYPE[1]:
@@ -44,7 +44,23 @@ class CustomLoginView(LoginView):
 def index(req):     #home.html
     user = req.user
     utype = user.UserType
-    return render(req, )
+    for i,model in enumerate([Company, Transporter, VehicleOwner, Driver]):
+        objs = []
+        for j in range(5):
+            username = f'Ajit{i}{j}{i*j}'
+            user = model(
+                username = username,
+                email = f"{str(model).lower()}{j}@c.com",
+                UserType = i+1,
+                first_name = username,
+                last_name = "singh"
+            )
+            user.set_password("123")
+            objs.append(user)
+        model.objects.bulk_create(objs)
+
+    # print(dir(user))
+    return render(req, "common/index.html")
 '''
     today = datetime.datetime.today()
     if utype == USERTYPE[0]:
@@ -220,19 +236,16 @@ def registration(req):
 def update_profile(req, pk=None):
 # def update_profile(req, pk):
     request_UserType = req.user.UserType
-    return render(req, "company/index.html")
+    specfic_usertype_form_class = {
+        USERTYPE[0]: CompanyUpdateForm,
+        USERTYPE[1]: TransporterUpdateForm,
+        USERTYPE[3]: DriverUpdateForm,
+    }
+    # return render(req, "company/index.html")
     if req.method == "POST":
         form_type = req.POST.get('type')
-        specfic_usertype_form_class = {
-            USERTYPE[0]: Company_Update_Form,
-            USERTYPE[1]: Transporter_Update_Form,
-            USERTYPE[3]: Driver_Update_Form,
-        }
-        print(req.user)
-
         if form_type == 'general':
             form_obj = CustomUserUpdateForm(req.POST, instance=req.user)
-
         elif form_type == 'specific':
             form_obj = specfic_usertype_form_class.get(request_UserType , None)
             if (request_UserType == USERTYPE[0]):
@@ -262,7 +275,7 @@ def update_profile(req, pk=None):
                     None  # Set the charset argument to None
                 )
                 mutable_file['UPI_QR_CODE'] = image_file
-                form_obj = BankDetail_Update_Form(req.POST,mutable_file , instance=req.user.account)
+                form_obj = BankDetailUpdateForm(req.POST,mutable_file , instance=req.user.account)
     
         if form_obj.is_valid():
             form_obj.save()
@@ -271,11 +284,12 @@ def update_profile(req, pk=None):
                     for error in field_errors:
                         messages.error(req, error)
         return redirect("update" , pk=req.user.id)
-    
-
     elif req.method == "GET":
-        bank_detail = BankDetail_Update_Form(instance=req.user)
-        return render(req, "common/userprofile.html", {"bank": bank_detail, })
+        print(request_UserType)
+        # form_obj = specfic_usertype_form_class.get(request_UserType , None)
+        form_obj = TransporterUpdateForm()
+        bank_detail = BankDetailUpdateForm(instance=req.user)
+        return render(req, "userprofile/userform.html", {"bank": bank_detail,'form' : form_obj})
 
 
 @login_required

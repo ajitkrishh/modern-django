@@ -1,0 +1,10 @@
+
+{% if request.user.UserType == 1  %}
+    {% include 'company/index.html' %}
+{% elif request.user.UserType == 2 %}
+    {% include 'transporter/index.html' %}
+{% elif request.user.UserType == 3 %}
+    {% include 'vehicle_owner/index.html' %}
+{% elif request.user.UserType == 4 %}
+    {% include 'driver/index.html' %}
+{% endif %}

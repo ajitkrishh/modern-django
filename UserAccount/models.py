@@ -43,10 +43,10 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     class TYPE(models.IntegerChoices):
-        Company = 1
-        Transporter = 2
-        VehicleOwner = 3
-        Driver = 4
+        Company = 1, 'Company'
+        Transporter = 2, 'Transporter'
+        VehicleOwner = 3, 'Vehicle Owner'
+        Driver = 4, 'Driver'
     username_validator = UnicodeUsernameValidator()
     username = models.CharField(_('username'), max_length=50, unique=True, validators=[username_validator])
     phone_regex = RegexValidator(
@@ -55,7 +55,7 @@ class CustomUser(AbstractUser):
     )
     # validators should be a list
     phone = models.CharField(_('phone number'), validators=[phone_regex], max_length=10, unique=True)
-    UserType = models.IntegerField(choices=TYPE)
+    UserType = models.IntegerField(choices=TYPE.choices)
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = ['username', 'UserType']
     credit = models.PositiveIntegerField(default=1)
@@ -74,8 +74,14 @@ class CustomUser(AbstractUser):
 
     def __str__(self) -> str:
         return f'{self.username}'
-
-
+    
+    def display_usertype(self) -> str:
+        return dict(CustomUser.TYPE.choices)[self.UserType]
+    
+    def save(self, *args, **kwargs):
+        print(self.pk  ," pk ***")
+        super().save(*args, **kwargs)
+    
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -104,18 +110,18 @@ REQUEST_STATUS = (
     )
 
 class Company(CustomUser, BaseModel):
-    Company_Name = models.CharField(_('Company Name'), max_length=100, blank=True)
+    Company_Name = models.CharField(_('Company Name'), max_length=100,null=True, blank=True)
     
     class Meta:
         verbose_name = "Company"
     def __str__(self):
-        return f'{str(self.Company_Name)} '
+        return f'{str(self.Company_Name)}'
 
 
 class Transporter(CustomUser, BaseModel):
-    pan_card = models.CharField(_('Pan Card'), max_length=10, blank=True)
-    aadhar = models.CharField(_('Aadhar number'), max_length=12, blank=True)
-    transport_name = models.CharField(_('Transport Name'), max_length=100, blank=True)
+    pan_card = models.CharField(_('Pan Card'), max_length=10,null=True, blank=True)
+    aadhar = models.CharField(_('Aadhar number'), max_length=12,null=True, blank=True)
+    transport_name = models.CharField(_('Transport Name'), max_length=100,null=True, blank=True)
     builti_number = models.PositiveIntegerField(default=1)
     vehicle_under_control = models.ManyToManyField(
         'Vehicle', related_name="transporters", blank=True, through='VehicleRequest')
@@ -134,7 +140,7 @@ class VehicleOwner(CustomUser, BaseModel):
 
 
 class Vehicle(models.Model):
-    owner = models.ForeignKey(VehicleOwner, on_delete=models.SET_NULL,
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL,
                               null=True, blank=True, related_name='owned_vehicles')
     driver = models.OneToOneField(
         'Driver', on_delete=models.SET_NULL, null=True, blank=True)
@@ -149,13 +155,13 @@ class Vehicle(models.Model):
 
 
 class Driver(CustomUser, BaseModel):
-    license = models.CharField(_('license number'), max_length=10, blank=True)
-    aadhar = models.CharField(_('Aadhar number'), max_length=12, blank=True)
+    license = models.CharField(_('license number'), max_length=10,null=True, blank=True)
+    aadhar = models.CharField(_('Aadhar number'), max_length=12,null=True, blank=True)
     class Meta:
         verbose_name = "Driver"
 
     def __str__(self):
-        return f'{str(self.user.get_short_name())}'
+        return f'{str(self.get_short_name())}'
 
 class VehicleRequest(BaseModel):
     vehicle_owner = models.ForeignKey('VehicleOwner', on_delete=models.CASCADE)

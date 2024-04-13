@@ -1,14 +1,18 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+
 
 # from .models import *
 from .models import (Company,CustomUser, 
                      Transporter, Vehicle, 
                      VehicleOwner, Driver, 
                      VehicleRequest)
-from .forms import AdminCompanyUpdateForm, AdminTransporterUpdateForm, AdminDriverUpdateForm,CustomUserRegistration
+from .forms import (AdminCompanyUpdateForm, AdminCompanyCreateForm,
+                    AdminTransporterUpdateForm, AdminTransporterCreateForm,
+                    AdminDriverUpdateForm, AdminDriverCreateForm,
+                    CustomUserRegistration, CustomUserUpdateForm)
 
-class CustomUserAdmin(admin.ModelAdmin):
-    form = CustomUserRegistration
+class CustomUserAdmin(UserAdmin):
     list_display = ['username','phone','get_full_name',
                     'UserType','credit']
     list_filter = ['UserType']
@@ -18,15 +22,24 @@ class CustomUserAdmin(admin.ModelAdmin):
 admin.site.register(CustomUser,CustomUserAdmin)
 
 class Transporter_Admin(admin.ModelAdmin):
-    form = AdminTransporterUpdateForm
+
     list_display = ['id','transport_name','builti_number']
     list_per_page = 20
     list_editable = ['transport_name']
+    def get_form(self, request, obj=None, **kwargs):
+        if obj is None:
+            return AdminTransporterCreateForm
+        else:
+            return AdminTransporterUpdateForm
 admin.site.register(Transporter,Transporter_Admin)
 
 
 class Company_Admin(admin.ModelAdmin):
-    form = AdminCompanyUpdateForm
+    def get_form(self, request, obj=None, **kwargs):
+        if obj is None:
+            return AdminCompanyCreateForm
+        else:
+            return AdminCompanyUpdateForm
     list_display = ['id','Company_Name']
     list_editable = ['Company_Name']
     list_per_page = 20
@@ -34,7 +47,11 @@ class Company_Admin(admin.ModelAdmin):
 admin.site.register(Company,Company_Admin)
 
 class Driver_Admin(admin.ModelAdmin):
-    form = AdminDriverUpdateForm
+    def get_form(self, request, obj=None, **kwargs):
+        if obj is None:
+            return AdminDriverCreateForm
+        else:
+            return AdminDriverUpdateForm
     list_display = ['id','license','aadhar']
     list_per_page = 20
     list_editable = ['license','aadhar']

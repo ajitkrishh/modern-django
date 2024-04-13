@@ -39,6 +39,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
+
+    "unpoly.contrib.django.UnpolyMiddleware",
 ]
 
 ROOT_URLCONF = "GoTruck.urls"
@@ -176,3 +179,5 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+X_FRAME_OPTIONS = "SAMEORIGIN"

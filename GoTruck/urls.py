@@ -15,10 +15,8 @@ from UserAccount import views
 
 
 urlpatterns = [
+    path('', include("UserAccount.urls")),
     path("admin/", admin.site.urls),
-    path('account/', include("UserAccount.urls")),
-
-    
     path("login/", views.CustomLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
    
