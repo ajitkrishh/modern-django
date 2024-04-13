@@ -1,0 +1,2 @@
+import{r as a,h as c,H as e}from"./p-a17eb3c5.js";const r=class{constructor(c){a(this,c)}render(){return c(e,{key:"6428d626e770b6c2709c0902431524ce5bdc57b7"},c("slot",{key:"71a83f3c865e81f14ead7242a20bbad4c56adc60"}))}};export{r as nav_bar};
+//# sourceMappingURL=p-eec664e7.entry.js.map
