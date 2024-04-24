@@ -6,6 +6,10 @@ from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.db.models import Q
+
 
 # Create your models here.
 class CustomUserManager(BaseUserManager):
@@ -79,7 +83,6 @@ class CustomUser(AbstractUser):
         return dict(CustomUser.TYPE.choices)[self.UserType]
     
     def save(self, *args, **kwargs):
-        print(self.pk  ," pk ***")
         super().save(*args, **kwargs)
     
 class BaseModel(models.Model):
@@ -109,7 +112,8 @@ REQUEST_STATUS = (
         ('D', 'Declined'),
     )
 
-class Company(CustomUser, BaseModel):
+class Company(BaseModel):
+    user = models.OneToOneField(CustomUser,  related_name='company' , on_delete=models.CASCADE)
     Company_Name = models.CharField(_('Company Name'), max_length=100,null=True, blank=True)
     
     class Meta:
@@ -118,7 +122,8 @@ class Company(CustomUser, BaseModel):
         return f'{str(self.Company_Name)}'
 
 
-class Transporter(CustomUser, BaseModel):
+class Transporter(BaseModel):
+    user = models.OneToOneField(CustomUser,  related_name='transporter' , on_delete=models.CASCADE)
     pan_card = models.CharField(_('Pan Card'), max_length=10,null=True, blank=True)
     aadhar = models.CharField(_('Aadhar number'), max_length=12,null=True, blank=True)
     transport_name = models.CharField(_('Transport Name'), max_length=100,null=True, blank=True)
@@ -132,14 +137,16 @@ class Transporter(CustomUser, BaseModel):
         return f'{str(self.transport_name)}'
 
 
-class VehicleOwner(CustomUser, BaseModel):
+class VehicleOwner(BaseModel):
+    user = models.OneToOneField(CustomUser,  related_name='vehicleowner' , on_delete=models.CASCADE)
+    
     class Meta:
         verbose_name = "Vehicle Owner"
     def __str__(self):
         return f'{str(self.user.get_short_name())}'
 
 
-class Vehicle(models.Model):
+class Vehicle(models.Model):    
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL,
                               null=True, blank=True, related_name='owned_vehicles')
     driver = models.OneToOneField(
@@ -154,14 +161,15 @@ class Vehicle(models.Model):
         return f'{self.vehicle_number}'
 
 
-class Driver(CustomUser, BaseModel):
+class Driver(BaseModel):
+    user = models.OneToOneField(CustomUser,  related_name='driver' , on_delete=models.CASCADE)
     license = models.CharField(_('license number'), max_length=10,null=True, blank=True)
     aadhar = models.CharField(_('Aadhar number'), max_length=12,null=True, blank=True)
     class Meta:
         verbose_name = "Driver"
 
     def __str__(self):
-        return f'{str(self.get_short_name())}'
+        return f'{str(self.user.get_short_name())}'
 
 class VehicleRequest(BaseModel):
     vehicle_owner = models.ForeignKey('VehicleOwner', on_delete=models.CASCADE)
@@ -169,6 +177,33 @@ class VehicleRequest(BaseModel):
     transporter = models.ForeignKey("Transporter", on_delete=models.CASCADE)
     request_status = models.CharField(
         choices=REQUEST_STATUS, max_length=20, blank=False, default=REQUEST_STATUS[0][0])
+    
+
+@receiver(post_save, sender=CustomUser)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        # BankDetail.objects.create(user = instance)
+        if (instance.UserType == 1):
+            Company.objects.create(user=instance)
+        elif (instance.UserType == 2):
+            Transporter.objects.create(user=instance)
+        elif (instance.UserType == 3):
+            VehicleOwner.objects.create(user=instance)
+        elif (instance.UserType == 4):
+            Driver.objects.create(user=instance)
+
+
+@receiver(post_save, sender=CustomUser)
+def save_profile(sender, instance, **kwargs):
+    if (instance.UserType == 1):
+        instance.company.save()
+    elif (instance.UserType == 2):
+        instance.transporter.save()
+    elif (instance.UserType == 3):
+        instance.vehicleowner.save()
+    elif (instance.UserType == 4):
+        instance.driver.save()
+
     
 # class Friendship(models.Model):
 #     from_user = models.ForeignKey(

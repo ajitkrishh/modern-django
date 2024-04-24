@@ -7,10 +7,6 @@ from .models import (Company,CustomUser,
                      Transporter, Vehicle, 
                      VehicleOwner, Driver, 
                      VehicleRequest)
-from .forms import (AdminCompanyUpdateForm, AdminCompanyCreateForm,
-                    AdminTransporterUpdateForm, AdminTransporterCreateForm,
-                    AdminDriverUpdateForm, AdminDriverCreateForm,
-                    CustomUserRegistration, CustomUserUpdateForm)
 
 class CustomUserAdmin(UserAdmin):
     list_display = ['username','phone','get_full_name',
@@ -22,24 +18,13 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser,CustomUserAdmin)
 
 class Transporter_Admin(admin.ModelAdmin):
-
     list_display = ['id','transport_name','builti_number']
     list_per_page = 20
     list_editable = ['transport_name']
-    def get_form(self, request, obj=None, **kwargs):
-        if obj is None:
-            return AdminTransporterCreateForm
-        else:
-            return AdminTransporterUpdateForm
 admin.site.register(Transporter,Transporter_Admin)
 
 
 class Company_Admin(admin.ModelAdmin):
-    def get_form(self, request, obj=None, **kwargs):
-        if obj is None:
-            return AdminCompanyCreateForm
-        else:
-            return AdminCompanyUpdateForm
     list_display = ['id','Company_Name']
     list_editable = ['Company_Name']
     list_per_page = 20
@@ -47,11 +32,6 @@ class Company_Admin(admin.ModelAdmin):
 admin.site.register(Company,Company_Admin)
 
 class Driver_Admin(admin.ModelAdmin):
-    def get_form(self, request, obj=None, **kwargs):
-        if obj is None:
-            return AdminDriverCreateForm
-        else:
-            return AdminDriverUpdateForm
     list_display = ['id','license','aadhar']
     list_per_page = 20
     list_editable = ['license','aadhar']
@@ -67,7 +47,6 @@ class Vehicle_Admin(admin.ModelAdmin):
     list_select_related = ['owner']
     list_display = ['id','vehicle_number','owner','driver']
     search_fields= ['vehicle_number']
-
     list_per_page = 20
 admin.site.register(Vehicle,Vehicle_Admin)
 
@@ -76,7 +55,5 @@ class Vehicle_Requests_Admin(admin.ModelAdmin):
     list_select_related = ['vehicle' , 'transporter' , 'vehicle_owner']
     list_display = ['id','vehicle' , 'transporter' , 'vehicle_owner','request_status']
     list_editable = ['request_status']
-    # search_fields= ['vehicle_number']
-
     list_per_page = 20
 admin.site.register(VehicleRequest,Vehicle_Requests_Admin)

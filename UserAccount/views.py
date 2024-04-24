@@ -44,20 +44,31 @@ class CustomLoginView(LoginView):
 def index(req):     #home.html
     user = req.user
     utype = user.UserType
-    for i,model in enumerate([Company, Transporter, VehicleOwner, Driver]):
-        objs = []
-        for j in range(5):
-            username = f'Ajit{i}{j}{i*j}'
-            user = model(
-                username = username,
-                email = f"{str(model).lower()}{j}@c.com",
-                UserType = i+1,
-                first_name = username,
-                last_name = "singh"
-            )
-            user.set_password("123")
-            objs.append(user)
-        model.objects.bulk_create(objs)
+    # o1,o2,o3,o4 = [],[],[],[]
+    # for i,model in enumerate([Company, Transporter, VehicleOwner, Driver]):
+    # l = [Company, Transporter, VehicleOwner, Driver]
+    # for i, model in enumerate(l):
+    #     o1 = []
+    #     q = CustomUser.objects.filter(UserType = USERTYPE[i]).order_by('pk')
+    #     if i == 0:
+    #         for m,j in enumerate(q):
+    #             o1.append(model(user = j , Company_Name = f"company{m+1}"))
+    #         model.objects.bulk_create(o1)
+    #     elif i == 1:
+    #         for m,j in enumerate(q):
+    #             pan = "pan{m*2}".zfill(4)
+    #             o1.append(model(user = j,pan_card = pan, transport_name = f"transport{m+1}" ))
+    #         model.objects.bulk_create(o1)
+    #     elif i == 2:
+    #         for m,j in enumerate(q):
+    #             o1.append(model(user = j))
+    #         model.objects.bulk_create(o1)
+    #     elif i == 3:
+    #         for m,j in enumerate(q):
+    #             o1.append(model(user = j,license = f"license{m+1}"))
+    #         model.objects.bulk_create(o1)
+        #     objs.append(model(user = user))
+        # model.objects.bulk_create(objs)
 
     # print(dir(user))
     return render(req, "common/index.html")
@@ -234,6 +245,7 @@ def registration(req):
 
 @login_required
 def update_profile(req, pk=None):
+    # breakpoint()
 # def update_profile(req, pk):
     request_UserType = req.user.UserType
     specfic_usertype_form_class = {
