@@ -245,6 +245,7 @@ def registration(req):
 
 @login_required
 def update_profile(req, pk=None):
+    # breakpoint()
 # def update_profile(req, pk):
     request_UserType = req.user.UserType
     specfic_usertype_form_class = {

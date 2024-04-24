@@ -1,4 +1,10 @@
-<div class="content-inner w-100" id="main">
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% comment %} {% load tags %} {% endcomment %}
+{% block main %}
+
+<main class="content-inner w-100" id="main">
 <!-- Page Header-->
 <header class="bg-white shadow-sm px-4 py-3 z-index-20">
     <div class="container-fluid px-0">
@@ -32,4 +38,6 @@
     </div>
   </footer>
 
-</div>
+</main>
+
+{% endblock main %}

@@ -4,7 +4,7 @@ from .models import (Company,CustomUser,
                      VehicleOwner, Driver, 
                      VehicleRequest)
 
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
 
 USERTYPE = CustomUser.TYPE
 
@@ -15,22 +15,22 @@ class CustomUserRegistration(UserCreationForm):
         model = CustomUser
         fields = ('username',"first_name","last_name","phone","UserType","password1","password2")
 
-class CustomUserUpdateForm(UserChangeForm):
+class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = UPDATE_FIELDS 
 
-class CompanyUpdateForm(UserChangeForm):
+class CompanyUpdateForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = ('Company_Name',)
 
-class TransporterUpdateForm(UserChangeForm):
+class TransporterUpdateForm(forms.ModelForm):
     class Meta:
         model = Transporter
         fields = ('pan_card', "aadhar","transport_name","builti_number","vehicle_under_control")
 
-class DriverUpdateForm(UserChangeForm):
+class DriverUpdateForm(forms.ModelForm):
     class Meta:
         model = Driver
         fields = ('license', "aadhar")
@@ -49,20 +49,3 @@ class BankDetailUpdateForm(forms.ModelForm):
 # ************************** ADMIN FORMS *********************************************
 # ***********************************************************************
 
-# class AdminCompanyUpdateForm(UserChangeForm):
-#     user_type = USERTYPE.Company
-#     class Meta:
-#         model = Company
-#         fields = ('Company_Name',)
-
-# class AdminTransporterUpdateForm(UserChangeForm):
-#     user_type = USERTYPE.Transporter
-#     class Meta:
-#         model = Transporter
-#         fields = ('pan_card', "aadhar","transport_name","builti_number")
-
-# class AdminDriverUpdateForm(UserChangeForm):
-#     user_type = USERTYPE.Driver
-#     class Meta:
-#         model = Driver
-#         fields = ('license', "aadhar")

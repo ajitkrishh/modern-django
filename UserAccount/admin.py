@@ -18,7 +18,6 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser,CustomUserAdmin)
 
 class Transporter_Admin(admin.ModelAdmin):
-
     list_display = ['id','transport_name','builti_number']
     list_per_page = 20
     list_editable = ['transport_name']
@@ -56,7 +55,5 @@ class Vehicle_Requests_Admin(admin.ModelAdmin):
     list_select_related = ['vehicle' , 'transporter' , 'vehicle_owner']
     list_display = ['id','vehicle' , 'transporter' , 'vehicle_owner','request_status']
     list_editable = ['request_status']
-    # search_fields= ['vehicle_number']
-
     list_per_page = 20
 admin.site.register(VehicleRequest,Vehicle_Requests_Admin)

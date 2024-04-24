@@ -1,2 +1,0 @@
-import{p as e,b as t}from"./p-a17eb3c5.js";export{s as setNonce}from"./p-a17eb3c5.js";import{g as a}from"./p-e1255160.js";const o=()=>{const t=import.meta.url;const a={};if(t!==""){a.resourcesUrl=new URL(".",t).href}return e(a)};o().then((async e=>{await a();return t([["p-3012f4fc",[[1,"my-component",{first:[1],middle:[1],last:[1]}]]],["p-eec664e7",[[1,"nav-bar"]]],["p-9fab8c24",[[0,"nav-li",{url:[1],text:[1],target:[1],icon:[1]}]]],["p-5ebb2c19",[[0,"page-footer"]]]],e)}));
-//# sourceMappingURL=gotruck-stencil.esm.js.map
