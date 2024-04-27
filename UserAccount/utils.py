@@ -15,7 +15,7 @@ def sanitize_integer_values(data_dict):
     return sanitized_dict
 
 
-def values_list_to_values(source:list, key_list:list[str]):
+def values_list_to_values(source: list, key_list: list[str]):
     """
     Transforms a list of values into a list of dictionaries using the provided key list.
 
@@ -44,20 +44,6 @@ def values_list_to_values(source:list, key_list:list[str]):
 
     return [{key: value for key, value in zip(key_list, item)} for item in source]
 
-def get_usertypes():
-    # USERTYPE = (
-    # ('Organisation'),
-    # ('Transporter'),
-    # ('Owner'),
-    # ('Driver'))
-    # return USERTYPE
-    return (1,2,3,4)
 
-def get_allowed_friendship():
-    USERTYPE = get_usertypes()
-    return {
-        USERTYPE[0]: USERTYPE[:2],#org  -> org,transporter
-        USERTYPE[1]: [USERTYPE[0]],# transporter -> org 
-        USERTYPE[2]: [USERTYPE[3]],# owner ->  driver
-        USERTYPE[3]: [USERTYPE[2]],#driver -> owner
-        }
+def get_usertypes():
+    return (1, 2, 3, 4)

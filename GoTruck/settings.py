@@ -26,30 +26,37 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    'sales',
-    'UserAccount',
+    "sales",
+    "UserAccount",
+    "transport",
 ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    
-
     "unpoly.contrib.django.UnpolyMiddleware",
 ]
+
+
+if DEBUG:
+    INSTALLED_APPS += [
+        "debug_toolbar",
+    ]
+
 
 ROOT_URLCONF = "GoTruck.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR,"templates")],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -124,58 +131,57 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 from django.contrib.messages import constants
 
 
-AUTH_USER_MODEL = 'UserAccount.CustomUser'
+AUTH_USER_MODEL = "UserAccount.CustomUser"
 
-STATICFILES_DIRS = [
-    BASE_DIR/'static'
-]
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles/')
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles/")
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-LOGIN_URL = 'login'
+LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "login"
 
 LOGGING1 = {
-    'version': 1,
-
-    'disable_existing_loggers':False,
-    'filters':{
-        'require_debug_true':{
-            '()' : 'django.utils.log.RequireDebugTrue',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
         }
     },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'level': 'DEBUG',
-            'filters': ['require_debug_true'],
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "filters": ["require_debug_true"],
         }
     },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers' : ['console'],
+    "loggers": {
+        "django.db.backends": {
+            "level": "DEBUG",
+            "handlers": ["console"],
         }
-    }
+    },
 }
 
 TIME_INPUT_FORMAT = [
-    '%I:%M %p',
+    "%I:%M %p",
 ]
 
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = "Asia/Kolkata"
 USE_L10N = True
 
 MESSAGE_TAGS = {
-    constants.ERROR:'danger' 
-    #helps in bootstrap formatting .
+    constants.ERROR: "danger"
+    # helps in bootstrap formatting .
 }
 
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
-                            'UserAccount.backends.PhoneOrUsernameBackend',]
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "UserAccount.backends.PhoneOrUsernameBackend",
+]
 INTERNAL_IPS = [
     "127.0.0.1",
 ]

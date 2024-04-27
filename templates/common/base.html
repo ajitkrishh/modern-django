@@ -13,7 +13,6 @@
   <!-- Google fonts - Poppins -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
   <!-- Choices CSS-->
-  {% comment %} <link rel="stylesheet" href={% static "vendor/choices.js/public/assets/styles/choices.min.css" %}> {% endcomment %}
   <!-- theme stylesheet-->
   <link rel="stylesheet" href={% static "css/style.default.css" %} id="theme-stylesheet">
   <!-- Custom stylesheet - for your changes-->
@@ -43,12 +42,12 @@
                 </div>
                 <div class="brand-text d-none d-sm-inline-block d-lg-none"><strong>GoTruck</strong></div>
               </a>
-              <!-- Toggle Button--><a class="menu-btn active" id="toggle-btn"
-                href="#"><span></span><span></span><span></span></a>
+              <!-- Toggle Button-->
+              <a class="menu-btn active" id="toggle-btn" href="#"><span></span><span></span><span></span></a>
             </div>
             <!-- Navbar Menu -->
             <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
-             
+
               <!-- Logout    -->
               <li class="nav-item">
                 <form method="post" action="{% url 'logout' %}">
@@ -73,7 +72,7 @@
             class="avatar shadow-0 img-fluid rounded-circle" src="img/avatar-1.jpg" alt="...">
           <div class="ms-3 title">
             <a href="{% url "update" user.pk %}" up-target="#main">
-              <h1 class="h4 mb-2">Mark Stephen</h1>
+              <h1 class="h4 mb-2">{{ user.first_name }}</h1>
             </a>
             <p class="text-sm text-gray-500 fw-light mb-0 lh-1">{{user.display_usertype}}</p>
           </div>
@@ -84,56 +83,29 @@
       </nav>
 
         {% block main %}
-        
+
         {% endblock main %}
-      
+
     </div>
   </div>
   <!-- JavaScript files-->
-  <script src={% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}></script>
+  {% comment %} <script src={% static "vendor/bootstrap/js/bootstrap.bundle.min.js" %}></script>
   <script src={% static "vendor/chart.js/Chart.min.js" %}></script>
-  <script src={% static "vendor/just-validate/js/just-validate.min.js" %}></script>
+  <script src={% static "vendor/just-validate/js/just-validate.min.js" %}></script> {% endcomment %}
   {% comment %} <script src={% static "vendor/choices.js/public/assets/scripts/choices.min.js" %}></script> {% endcomment %}
-  <script src={% static "js/charts-home.js" %}></script>
+  {% comment %} <script src={% static "js/charts-home.js" %}></script> {% endcomment %}
   <!-- Main File-->
   <script src={% static "js/front.js" %}></script>
   <script type="module" src={% static "js/dist/gotruck-stencil/gotruck-stencil.esm.js" %}></script>
-  <script>
-    // ------------------------------------------------------- //
-    //   Inject SVG Sprite - 
-    //   see more here 
-    //   https://css-tricks.com/ajaxing-svg-sprite/
-    // ------------------------------------------------------ //
-    {% comment %} function injectSvgSprite(path) {
 
-      var ajax = new XMLHttpRequest();
-      ajax.open("GET", path, true);
-      ajax.send();
-      ajax.onload = function (e) {
-        var div = document.createElement("div");
-        div.className = 'd-none';
-        div.innerHTML = ajax.responseText;
-        console.log(ajax.responseText)
-        document.body.insertBefore(div, document.body.childNodes[0]);
-      }
-    } {% endcomment %}
-    // this is set to BootstrapTemple website as you cannot 
-    // inject local SVG sprite (using only 'icons/orion-svg-sprite.svg' path)
-    // while using file:// protocol
-    // pls don't forget to change to your domain :)
-    {% comment %} injectSvgSprite('https://bootstraptemple.com/files/icons/orion-svg-sprite.svg'); {% endcomment %}
-
-
-  </script>
   <script src="{% static "vendor/unpoly/unpoly.min.js" %}"></script>
   <script src="{% static "vendor/unpoly/unpoly-bootstrap5.js" %}"></script>
   <link rel="stylesheet" href={% static "vendor/tomselect/tomselect.css" %}>
   <script src="{% static "vendor/tomselect/tomselect.js" %}"></script>
   <script src="{% static "js/script.js" %}"></script>
-  
+
  <!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  {% comment %} <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"  integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> {% endcomment %}
 </body>
 
 </html>
